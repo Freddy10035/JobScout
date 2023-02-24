@@ -19,7 +19,7 @@ This project requires the following dependencies:
 
 ## About
 
-JobScout was created by [@Freddy10035](www.github.com/Freddy10035) as part of a project to help other developers and job searchers get job alerts much faster. 
+JobScout was created by [@Freddy10035](https://www.github.com/Freddy10035) as part of a project to help other developers and job searchers get job alerts much faster. 
 If you have any questions or suggestions, feel free to contact me [here](mailto:flaughters@gmail.com).
 
  
