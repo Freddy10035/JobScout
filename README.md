@@ -1,9 +1,9 @@
-# Developer-Jobs
+# JobScout
 
-The Developer Job Scraper is a Python web scraper that extracts job listings from the different job boards for the software/data and other relevant categories. 
+JobScout is a Python bot that extracts job listings from the different job boards from plenty different categories. 
 The scraper uses the requests library to make a `HTTP GET` request to the job board website, and the `beautifulsoup4` library to parse the HTML response and extract the relevant information from the job listings.
-The extracted information includes the job title, company name, job location, job type, and job function. The scraper can be used to quickly gather job listing information for analysis or other purposes.
-## How to Use
+The extracted information includes the `job title`, `company name`, `job location`, `job type`, `salary` and `job function`. The scraper can be used to quickly gather job listing information for analysis or other purposes.
+## Usage
 
 To use this scraper, simply run `main.py`. 
 The output will be printed to the console and saved to your configures MySQL or PostgresSQL database.
