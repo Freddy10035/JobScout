@@ -17,7 +17,7 @@ my_cursor = mydb.cursor()
 # search_function = input("Enter the job function you want to search for: ")
 
 # Define the list of job functions to choose from
-job_functions = ['All Job Functions', 'Accounting, Auditing & Finance', 'Admin & Office', 'Building & Architecture',
+job_functions = ['All Jobs', 'Accounting, Auditing & Finance', 'Admin & Office', 'Building & Architecture',
                  'Community & Social Services', 'Consulting & Strategy', 'Creative & Design',
                  'Customer Service & Support', 'Driver & Transport Services', 'Engineering & Technology',
                  'Estate Agents & Property Management', 'Farming & Agriculture', 'Food Services & Catering',
@@ -30,21 +30,25 @@ job_functions = ['All Job Functions', 'Accounting, Auditing & Finance', 'Admin &
 print("Please choose a job function:")
 for i, job_function in enumerate(job_functions):
     print(f"{i}. {job_function}")
-selection = input("Enter the number of the job function you want to search for: ")
+print("\n")
+selection = input("Enter the number of the job function you want to search for: \n")
 
 print("\n")
 print("====================================================================================")
 
 # Convert the selection to an integer and use it to select the job function
 selection = int(selection)
-if 1 <= selection <= len(job_functions):
+if selection == 0:
+    search_function = 'All Jobs'
+    print(f"You have chosen to search for '{search_function}'.")
+elif 1 <= selection <= len(job_functions):
     search_function = job_functions[selection]
     print(f"You have chosen to search for '{search_function}' job function.")
 else:
     print("Invalid selection.")
 
+
 print("====================================================================================")
-print("\n")
 
 # Convert the selection to an integer and use it to select the job function
 search_function = int(selection)
@@ -63,7 +67,8 @@ for i in range(1, 46):  # scrape pages 1-45
         job_function = job.find('p', class_='text-sm text-gray-500 text-loading-animate inline-block').text.split(':')[
             1].strip()
         # if search_function.lower() in job_function.lower():
-        if job_function.lower().startswith(job_functions[search_function].lower()):
+        # if job_function.lower().startswith(job_functions[search_function].lower()):
+        if selection == 0 or job_function.lower().startswith(job_functions[selection].lower()):
 
             found_jobs = True
             job_title = job.find('p', class_='text-lg font-medium break-words text-brand-linked').text.strip()
@@ -79,9 +84,13 @@ for i in range(1, 46):  # scrape pages 1-45
             job_type = job.find_all('span', class_='mb-3 px-3 py-1 rounded bg-brand-opaque mr-2 text-loading-hide')[
                 1].text.strip()
 
+            # extract the job date posted
+            # job_date_posted = job.find('p', class_='ml-auto text-sm font-normal text-gray-700 text-loading-animate').text.strip()
+
             # extract the job function
             job_function = \
-            job.find('p', class_='text-sm text-gray-500 text-loading-animate inline-block').text.split(':')[1].strip()
+                job.find('p', class_='text-sm text-gray-500 text-loading-animate inline-block').text.split(':')[
+                    1].strip()
 
             # extract the job salary
             salary_span = job.find_all('span', class_='mb-3 px-3 py-1 rounded bg-brand-opaque mr-2 text-loading-hide')[
@@ -90,7 +99,7 @@ for i in range(1, 46):  # scrape pages 1-45
 
             # print the extracted information
             print(
-                "Job Title: {}\nCompany Name: {}\nJob Location: {}\nJob Type: {}\nJob Salary: {}\nJob Function: {}\n===============================================================".format(
+                "\nJob Title: {}\nCompany Name: {}\nJob Location: {}\nJob Type: {}\nJob Salary: {}\nJob Function: {}\n\n===============================================================".format(
                     job_title, company_name, job_location, job_type, salary, job_function))
 
             # Check if job listing already exists in database
