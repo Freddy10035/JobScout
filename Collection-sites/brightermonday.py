@@ -1,13 +1,33 @@
+import re
+
 from bs4 import BeautifulSoup
 import requests
 import mysql.connector
+import os
+from dotenv import load_dotenv
+
+# Connect to MySQL database in the amazon RDS
+# mydb = mysql.connector.connect(
+#     host="",
+#     user="",
+#     password="",
+#     database=""
+# )
+
+load_dotenv()
+
+# Get environment variables
+db_host = os.getenv("DB_HOST")
+db_user = os.getenv("DB_USER")
+db_password = os.getenv("DB_PASSWORD")
+db_name = os.getenv("DB_NAME")
 
 # Connect to MySQL database
 mydb = mysql.connector.connect(
-    host="localhost",
-    user="freddie",
-    password="freddie10035",
-    database="developer_jobs"
+    host=db_host,
+    user=db_user,
+    password=db_password,
+    database=db_name
 )
 
 # Create cursor object
@@ -56,6 +76,9 @@ search_function = int(selection)
 # Flag to keep track if any jobs were found for the search function
 found_jobs = False
 
+# Delay the execution of the script for 5 seconds to allow the website to load
+# time.sleep(10)
+
 # Loop through all pages
 for i in range(1, 46):  # scrape pages 1-45
     url = f"https://www.brightermonday.co.ke/jobs?page={i}"
@@ -71,21 +94,33 @@ for i in range(1, 46):  # scrape pages 1-45
         if selection == 0 or job_function.lower().startswith(job_functions[selection].lower()):
 
             found_jobs = True
-            job_title = job.find('p', class_='text-lg font-medium break-words text-brand-linked').text.strip()
+            job_title = job.find('p', class_='text-lg font-medium break-words text-link-500').text.strip()
+
+            # extract the job link
+            job_link = job.find('a')['href']
 
             # extract the company name
-            company_name = job.find('p', class_='text-sm text-brand-linked').text.strip()
+            company_name = job.find('p', class_='text-sm text-link-500').text.strip()
 
             # extract the job location
             job_location = job.find('span',
-                                    class_='mb-3 px-3 py-1 rounded bg-brand-opaque mr-2 text-loading-hide').text.strip()
+                                    class_='mb-3 px-3 py-1 rounded bg-brand-secondary-100 mr-2 text-loading-hide').text.strip()
 
             # extract the job type
-            job_type = job.find_all('span', class_='mb-3 px-3 py-1 rounded bg-brand-opaque mr-2 text-loading-hide')[
+            job_type = job.find_all('span', class_='mb-3 px-3 py-1 rounded bg-brand-secondary-100 mr-2 text-loading-hide')[
                 1].text.strip()
 
             # extract the job date posted
-            # job_date_posted = job.find('p', class_='ml-auto text-sm font-normal text-gray-700 text-loading-animate').text.strip()
+            date_element = job.find('p', class_='ml-auto text-sm font-normal text-gray-700 text-loading-animate')
+            if date_element is not None:
+                date_text = date_element.text.strip()
+                date_posted = re.search(r'\w+\s+\d{1,2},\s+\d{4}', date_text)
+                if date_posted is not None:
+                    date = date_posted.group(0)
+                else:
+                    date_posted = ""
+            else:
+                date_posted = ""
 
             # extract the job function
             job_function = \
@@ -93,17 +128,17 @@ for i in range(1, 46):  # scrape pages 1-45
                     1].strip()
 
             # extract the job salary
-            salary_span = job.find_all('span', class_='mb-3 px-3 py-1 rounded bg-brand-opaque mr-2 text-loading-hide')[
+            salary_span = job.find_all('span', class_='mb-3 px-3 py-1 rounded bg-brand-secondary-100 mr-2 text-loading-hide')[
                 -1]
             salary = salary_span.text.strip() if salary_span else "Confidential"
 
             # print the extracted information
             print(
-                "\nJob Title: {}\nCompany Name: {}\nJob Location: {}\nJob Type: {}\nJob Salary: {}\nJob Function: {}\n\n===============================================================".format(
-                    job_title, company_name, job_location, job_type, salary, job_function))
+                "\nJob Title: {}\nCompany Name: {}\nJob Location: {}\nJob Type: {}\nJob Salary: {}\nJob Function: {}\nDate Posted: {}\nJob Link: {}\n\n===============================================================".format(
+                    job_title, company_name, job_location, job_type, salary, job_function, date_posted, job_link))
 
             # Check if job listing already exists in database
-            sql = "SELECT job_title, company_name FROM BrighterMonday_job_listings WHERE job_title = %s AND company_name = %s"
+            sql = "SELECT job_title, company_name FROM BrighterMonday WHERE job_title = %s AND company_name = %s"
             val = (job_title, company_name)
             my_cursor.execute(sql, val)
             result = my_cursor.fetchone()
@@ -115,8 +150,8 @@ for i in range(1, 46):  # scrape pages 1-45
                 # If job listing does not exist, insert into database
                 if not result:
                     # Insert data into MySQL database
-                    sql = "INSERT INTO BrighterMonday_job_listings (job_title, company_name, job_location, job_type, job_salary, job_function) VALUES (%s, %s, %s, %s, %s, %s)"
-                    val = (job_title, company_name, job_location, job_type, salary, job_function)
+                    sql = "INSERT INTO BrighterMonday (job_title, company_name, job_location, job_type, job_salary, job_function, date_posted, job_link) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+                    val = (job_title, company_name, job_location, job_type, salary, job_function, date_posted, job_link)
 
                     my_cursor.execute(sql, val)
 
