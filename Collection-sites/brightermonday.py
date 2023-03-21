@@ -132,10 +132,25 @@ for i in range(1, 46):  # scrape pages 1-45
                 -1]
             salary = salary_span.text.strip() if salary_span else "Confidential"
 
+            job_page = requests.get(job_link)
+            job_soup = BeautifulSoup(job_page.content, 'html.parser')
+
+            job_summary = job_soup.find('p', class_='mb-4 text-sm text-gray-500').text.strip()
+            # job_summary = textwrap.indent(job_summary, " " * 10)  # indent the job summary with 4 spaces
+
+            job_requirements = job_soup.find('div', class_='text-sm text-gray-500').text.strip()
+            # job_requirements = textwrap.indent(job_requirements, " " * 10)  # indent the job requirements with 4 spaces
+
+            # qualifications_experience = job_soup.find('ul', class_='pl-5 text-sm list-disc text-gray-500').text.strip()
+
+            min_qualification = job_soup.find('span', string='Minimum Qualification:').find_next_sibling('span').text
+            experience_level = job_soup.find('span', string='Experience Level:').find_next_sibling('span').text
+            experience_length = job_soup.find('span', string='Experience Length:').find_next_sibling('span').text
+
             # print the extracted information
             print(
-                "\nJob Title: {}\nCompany Name: {}\nJob Location: {}\nJob Type: {}\nJob Salary: {}\nJob Function: {}\nDate Posted: {}\nJob Link: {}\n\n===============================================================".format(
-                    job_title, company_name, job_location, job_type, salary, job_function, date_posted, job_link))
+                "\nJob Title: {}\nCompany Name: {}\nJob Location: {}\nJob Type: {}\nJob Salary: {}\nJob Function: {}\nDate Posted: {}\nJob Link: {}\nJob Summary: {}\nMinimum Qualification: {}\nExperience Level: {}\nExperience Length: {}\nJob Requirements/Description: {}\n\n===============================================================".format(
+                    job_title, company_name, job_location, job_type, salary, job_function, date_posted, job_link, job_summary, min_qualification, experience_level, experience_length, job_requirements))
 
             # Check if job listing already exists in database
             sql = "SELECT job_title, company_name FROM BrighterMonday WHERE job_title = %s AND company_name = %s"
@@ -150,8 +165,8 @@ for i in range(1, 46):  # scrape pages 1-45
                 # If job listing does not exist, insert into database
                 if not result:
                     # Insert data into MySQL database
-                    sql = "INSERT INTO BrighterMonday (job_title, company_name, job_location, job_type, job_salary, job_function, date_posted, job_link) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-                    val = (job_title, company_name, job_location, job_type, salary, job_function, date_posted, job_link)
+                    sql = "INSERT INTO BrighterMonday (job_title, company_name, job_location, job_type, job_salary, job_function, date_posted, job_link, job_summary, min_qualifications, experience_level, experience_length, job_requirements) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                    val = (job_title, company_name, job_location, job_type, salary, job_function, date_posted, job_link, job_summary, min_qualification, experience_level, experience_length, job_requirements)
 
                     my_cursor.execute(sql, val)
 
