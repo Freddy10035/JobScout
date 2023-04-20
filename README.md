@@ -7,16 +7,15 @@ The extracted information includes the `job title`, `company name`, `job locatio
 ## Usage
 
 To use this bot, simply run `main.py`. 
-The output will be printed to the console and saved to your configures MySQL or PostgreSQL database.
+The output will be printed to the console and saved to your configured MySQL or PostgreSQL database.
 
 ## Dependencies
 
 This project requires the following dependencies:
-
-    beautifulsoup4
-    requests
-    mysql-connector-python
-    psycopg2
+- beautifulsoup4
+- requests
+- mysql-connector-python
+- psycopg2
 
 ## About
 
