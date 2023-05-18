@@ -35,10 +35,14 @@ for job in job_listings:
     job_page = requests.get(job_link)
     job_soup = BeautifulSoup(job_page.content, 'html.parser')
 
-    job_summary = job_soup.find('p', class_='mb-4 text-sm text-gray-500').text.strip()
+    # job_summary = job_soup.find('p', class_='mb-4 text-sm text-gray-500').text.strip()
+    job_summary = str(job_soup.find('p', class_='mb-4 text-sm text-gray-500'))
+
     # job_summary = textwrap.indent(job_summary, " " * 10)  # indent the job summary with 4 spaces
 
-    job_requirements = job_soup.find('div', class_='text-sm text-gray-500').text.strip()
+    # job_requirements = job_soup.find('div', class_='text-sm text-gray-500').text.strip()
+    job_requirements = str(job_soup.find('div', class_='text-sm text-gray-500'))
+
     # job_requirements = textwrap.indent(job_requirements, " " * 10)  # indent the job requirements with 4 spaces
 
     # qualifications_experience = job_soup.find('ul', class_='pl-5 text-sm list-disc text-gray-500').text.strip()
