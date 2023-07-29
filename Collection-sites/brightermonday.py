@@ -1,3 +1,4 @@
+import random
 import re
 from datetime import datetime
 from bs4 import BeautifulSoup
@@ -63,28 +64,43 @@ job_functions = ['All Jobs', 'Accounting, Auditing & Finance', 'Admin & Office',
                  'Product & Project Management', 'Quality Control & Assurance ', 'Research, Teaching & Training',
                  'Sales', 'Software & Data', 'Supply Chain & Procurement', 'Trades & Services']
 
-# Prompt the user to choose a job function
-print("Please choose a job function:")
-for i, job_function in enumerate(job_functions):
-    print(f"{i}. {job_function}")
-print("\n")
-selection = input("Enter the number of the job function you want to search for: \n")
+# # Prompt the user to choose a job function
+# print("Please choose a job function:")
+# for i, job_function in enumerate(job_functions):
+#     print(f"{i}. {job_function}")
+# print("\n")
+# selection = input("Enter the number of the job function you want to search for: \n")
+
+# print("\n")
+# print("====================================================================================")
+
+# # Convert the selection to an integer and use it to select the job function
+# selection = int(selection)
+# if selection == 0:
+#     search_function = 'All Jobs'
+#     print(f"You have chosen to search for '{search_function}'.")
+# elif 1 <= selection <= len(job_functions):
+#     search_function = job_functions[selection]
+#     print(f"You have chosen to search for '{search_function}' job function.")
+# else:
+#     print("Invalid selection.")
+
+
+# print("====================================================================================")
+
+# Randomly select a job function
+search_function = random.choice(job_functions)
 
 print("\n")
 print("====================================================================================")
 
 # Convert the selection to an integer and use it to select the job function
-selection = int(selection)
-if selection == 0:
-    search_function = 'All Jobs'
-    print(f"You have chosen to search for '{search_function}'.")
-elif 1 <= selection <= len(job_functions):
-    search_function = job_functions[selection]
-    print(f"You have chosen to search for '{search_function}' job function.")
+if search_function == 'All Jobs':
+    selection = 0
 else:
-    print("Invalid selection.")
+    selection = job_functions.index(search_function)
 
-
+print(f"You have randomly chosen to search for '{search_function}' job function.")
 print("====================================================================================")
 
 # Convert the selection to an integer and use it to select the job function
