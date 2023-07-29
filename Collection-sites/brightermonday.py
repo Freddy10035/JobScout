@@ -162,9 +162,21 @@ for i in range(1, 46):  # scrape pages 1-45
 
             # qualifications_experience = job_soup.find('ul', class_='pl-5 text-sm list-disc text-gray-500').text.strip()
 
-            min_qualification = job_soup.find('span', string='Minimum Qualification:').find_next_sibling('span').text
-            experience_level = job_soup.find('span', string='Experience Level:').find_next_sibling('span').text
-            experience_length = job_soup.find('span', string='Experience Length:').find_next_sibling('span').text
+            # min_qualification = job_soup.find('span', string='Minimum Qualification:').find_next_sibling('span').text
+            # experience_level = job_soup.find('span', string='Experience Level:').find_next_sibling('span').text
+            # experience_length = job_soup.find('span', string='Experience Length:').find_next_sibling('span').text
+            
+            # Extract the minimum qualification if it exists
+            min_qualification_element = job_soup.find('span', string='Minimum Qualification:')
+            min_qualification = min_qualification_element.find_next_sibling('span').text if min_qualification_element else None
+
+            # Extract the experience level if it exists
+            experience_level_element = job_soup.find('span', string='Experience Level:')
+            experience_level = experience_level_element.find_next_sibling('span').text if experience_level_element else None
+
+            # Extract the experience length if it exists
+            experience_length_element = job_soup.find('span', string='Experience Length:')
+            experience_length = experience_length_element.find_next_sibling('span').text if experience_length_element else None
 
             # print the extracted information
             print(
