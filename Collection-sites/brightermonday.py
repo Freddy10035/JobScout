@@ -25,6 +25,29 @@ mydb = mysql.connector.connect(
 # Create cursor object
 my_cursor = mydb.cursor()
 
+# Check if the table exists, and create it if it doesn't
+table_name = "BrighterMonday"
+create_table_query = f"""
+    CREATE TABLE IF NOT EXISTS {table_name} (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        job_title VARCHAR(255),
+        company_name VARCHAR(255),
+        job_location VARCHAR(255),
+        job_type VARCHAR(50),
+        job_salary DECIMAL(10, 2),
+        job_function VARCHAR(255),
+        date_posted DATE,
+        job_link VARCHAR(255),
+        job_summary TEXT,
+        min_qualifications TEXT,
+        experience_level VARCHAR(50),
+        experience_length VARCHAR(50),
+        job_requirements TEXT,
+        created_on DATETIME
+    )
+"""
+my_cursor.execute(create_table_query)
+
 # # Ask user for job function to search for
 # search_function = input("Enter the job function you want to search for: ")
 
