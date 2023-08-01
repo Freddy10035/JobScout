@@ -64,6 +64,7 @@ job_functions = ['All Jobs', 'Accounting, Auditing & Finance', 'Admin & Office',
                  'Product & Project Management', 'Quality Control & Assurance ', 'Research, Teaching & Training',
                  'Sales', 'Software & Data', 'Supply Chain & Procurement', 'Trades & Services']
 
+# test for jenkins
 # # Prompt the user to choose a job function
 # print("Please choose a job function:")
 # for i, job_function in enumerate(job_functions):
